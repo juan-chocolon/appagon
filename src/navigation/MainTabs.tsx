@@ -40,10 +40,10 @@ const MainTabs = () => {
         component={Profile}
         options={{
           tabBarLabel: ({ focused }) => (
-            <TabBarText focused={focused} title="Profile" />
+            <TabBarText focused={focused} title="Map" />
           ),
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} icon={"person"} />
+            <TabBarIcon focused={focused} icon={"map"} />
           ),
         }}
       />
