@@ -30,7 +30,7 @@ export default function ({
 
   async function login() {
     setLoading(true);
-    const { user, error } = await supabase.auth.signIn({
+    const { user, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });

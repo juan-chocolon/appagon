@@ -16,11 +16,12 @@ const AuthProvider = (props: Props) => {
 	// user null = loading
 	const [user, setUser] = useState<null | boolean>(null);
 	const [session, setSession] = useState<Session | null>(null);
+	
 
 	useEffect(() => {
-		const session = supabase.auth.session();
-		setSession(session);
-		setUser(session ? true : false);
+		supabase.auth.getSession().then(({ data: { session } }) => {
+			setSession(session)
+		  })
 		const { data: authListener } = supabase.auth.onAuthStateChange(
 			async (event, session) => {
 				console.log(`Supabase auth event: ${event}`);
@@ -29,7 +30,7 @@ const AuthProvider = (props: Props) => {
 			}
 		);
 		return () => {
-			authListener!.unsubscribe();
+			authListener!.subscription.unsubscribe();
 		};
 	}, [user]);
 
