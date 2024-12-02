@@ -1,181 +1,161 @@
-import React, { useRef } from "react";
-import { View, Linking, StyleSheet,} from "react-native";
-import { MainStackParamList } from "../types/navigation";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { supabase } from "../initSupabase";
-import { Callout, Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE, Region } from "react-native-maps";
-import MapView  from "react-native-maps";
+import React, { useState, useRef } from "react";
+import { StyleSheet, View, Alert } from "react-native";
+import MapView, { Marker } from "react-native-maps";
+import { FAB } from "react-native-paper";
+import { supabase } from "../initSupabase"; // Ensure this is correctly configured
+import uuid from 'react-native-uuid';
 
-import {
-  Layout,
-  Button,
-  Text,
-  TopNav,
-  Section,
-  SectionContent,
-  useTheme,
-  themeColor,
-} from "react-native-rapi-ui";
-import { Ionicons } from "@expo/vector-icons";
-
-// initiaal region for Map
 const INITIAL_REGION = {
   latitude: 18.2,
   longitude: -66.3,
   latitudeDelta: 4,
-  longitudeDelta: 2
+  longitudeDelta: 2,
 };
 
-// styless variable, can be extended to replacce other styles for widgets
-const styles = StyleSheet.create({
-  map: {
-    width: '100%',
-    height: '100%'
-  }
-});
+export default function Home() {
 
+  const [marker, setMarker] = useState(null);
+  const mapRef = useRef(null); // Reference to the map
+  const currentRegion = useRef(INITIAL_REGION); // Track current map region
 
+  const getCurrentUserId = async () => {
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser();
 
-export default function ({
-  navigation,
-}: NativeStackScreenProps<MainStackParamList, "MainTabs">) {
-  const { isDarkmode, setTheme } = useTheme();
+      if (error) {
+        console.error("Error fetching user:", error);
+        return null; // Handle the case when no user is logged in
+      }
 
-  // reference map for modifying map attributes or sending
-  const mapRef = useRef<MapView>();
-
-  // usse this funcction to focus when giving coordinates
-  const focusMap = () => {
-    mapRef.current?.animateToRegion();
-  };
-
-  const onRegionChange = (region: Region) => {
-    console.log(region)
-  };
-
-  const placePin = () => {
-
-  };
-
-  // TEMPORARY FOR TESTING
-  const markers = [
-    { latitude: 18.490255210644833,
-      longitude: -66.31430623007031,
-      latitudeDelta: 3.5203417881679115,
-      longitudeDelta: 2.306888398924741,
-      name: "Marker 1"
-    },
-
-    { latitude: 18.010219677392314,
-      latitudeDelta: 0.5,
-      longitude: -66.61325768000484,
-      longitudeDelta: 0.5,
-      name: "Ponce"
+      return user?.id; // Return the user ID
+    } catch (err) {
+      console.error("Unexpected error fetching user ID:", err);
+      return null; // Handle unexpected errors
     }
-  ];
-
-
-  const setZoom = () => {
   };
 
-  const updateMapMarkers = () => {
 
+  const handleRegionChange = (region) => {
+    // Update currentRegion with the latest map region
+    currentRegion.current = region;
+  };
+
+  const handleDoublePress = (event) => {
+    const { coordinate } = event.nativeEvent;
+
+    // Add marker at the tapped location
+    setMarker({
+      id: uuid.v4(),
+      coordinate,
+    });
+
+    console.log("Setting Marker Coordinates:", coordinate);
+
+    // Animate to the new location while keeping the current zoom level
+    mapRef.current?.animateToRegion({
+      ...currentRegion.current, // Preserve current latitudeDelta and longitudeDelta
+      latitude: coordinate.latitude,
+      longitude: coordinate.longitude,
+    });
+  };
+
+  const handleDragEnd = (newCoordinate) => {
+    // Update marker position when dragged
+    setMarker((prevMarker) => ({
+      ...prevMarker,
+      coordinate: newCoordinate,
+    }));
+  };
+
+  const saveReportToSupabase = async (markerData) => {
+    try {
+      const userId = await getCurrentUserId(); // Replace with your user authentication logic
+
+      // Mock municipio and barrio for simplicity
+      const municipio = "";
+      const barrio = "";
+
+      const { data, error } = await supabase.from("outage_reports").insert([
+        {
+          latitude: markerData.coordinate.latitude,
+          longitude: markerData.coordinate.longitude,
+          user_id: userId,
+          id: markerData.id,
+          municipio,
+          barrio,
+          created_at: ((new Date()).toISOString()).toLocaleString('zh-TW'),
+        },
+      ]);
+
+      if (error) {
+        console.error("Error saving report:", error);
+        Alert.alert("Error", "Failed to save the report. Please try again.");
+      } else {
+        console.log("Report saved:", data);
+        Alert.alert("Success", "Outage report saved successfully.");
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    }
+  };
+
+  const handleFABPress = () => {
+    if (marker) {
+      console.log("Confirming Marker Coordinates:", marker.coordinate);
+
+      // Save marker data to Supabase
+      saveReportToSupabase(marker);
+
+      // Clear the marker
+      setMarker(null);
+    } else {
+      console.log("No marker to confirm");
+      Alert.alert("No marker", "Please place a marker first.");
+    }
   };
 
   return (
-    <Layout>
-      {/* TOP APP BAR */}
-      <TopNav
-        middleContent="Appagon"
-        rightContent={
-          <Ionicons
-            name={isDarkmode ? "sunny" : "moon"} // set top right icon depending on dark/light theme
-            size={20}
-            color={isDarkmode ? themeColor.white100 : themeColor.dark}
-          />
-        }
-        // determines what happens when hitting top right icon
-        rightAction={() => {
-          if (isDarkmode) {
-            setTheme("light");
-          } else {
-            setTheme("dark");
-          }
-        }}
-      />
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+    <View style={styles.container}>
+      <MapView
+        ref={mapRef} // Attach the map reference
+        style={styles.map}
+        onDoublePress={handleDoublePress} // Add marker on double-tap
+        onRegionChangeComplete={handleRegionChange} // Track current region
+        initialRegion={INITIAL_REGION} // Initial map view
+        zoomEnabled={true} // Allow zoom gestures
       >
-        <MapView style={StyleSheet.absoluteFillObject}
-                  // region={this.props.coordinate}
-                  showsUserLocation
-                  showsMyLocationButton
-                  provider={PROVIDER_DEFAULT}
-                  initialRegion={INITIAL_REGION}
-                  // region={}
-                  onRegionChangeComplete={onRegionChange}
-                  onDoublePress={placePin}
-        // onDoublePress={}
-        >
-          {markers.map((marker, index) => (
-            <Marker 
-              key={index} 
-              coordinate={marker}
-            >
-              <Callout onPress={(ev: any) => {console.log(ev)}}>
-                <View style={{padding: 10}}>
-                  <Text style={{fontSize: 24}}>
-                    {marker.name}
-                  </Text>
-                </View>
-              </Callout>
-            </Marker>
-          ))};
+        {marker && (
+          <Marker
+            key={marker.id}
+            coordinate={marker.coordinate}
+            draggable
+            onDragEnd={(e) => handleDragEnd(e.nativeEvent.coordinate)}
+          />
+        )}
+      </MapView>
 
-        </MapView>
-        {/* <Section style={{ marginTop: 20 }}>
-          <SectionContent>
-            <Text fontWeight="bold" style={{ textAlign: "center" }}>
-              These UI components provided by Rapi UI
-            </Text>
-            <Button
-              style={{ marginTop: 10 }}
-              text="Rapi UI Documentation"
-              status="info"
-              onPress={() => Linking.openURL("https://rapi-ui.kikiding.space/")}
-            />
-            <Button
-              text="Go to second screen"
-              onPress={() => {
-                navigation.navigate("SecondScreen");
-              }}
-              style={{
-                marginTop: 10,
-              }}
-            />
-            <Button
-              status="danger"
-              text="Logout"
-              onPress={async () => {
-                const { error } = await supabase.auth.signOut();
-                if (!error) {
-                  alert("Signed out!");
-                }
-                if (error) {
-                  alert(error.message);
-                }
-              }}
-              style={{
-                marginTop: 10,
-              }}
-            />
-          </SectionContent>
-        </Section> */}
-      </View>
-    </Layout>
+      <FAB
+        style={styles.fab}
+        icon="plus"
+        label="Report outage"
+        onLongPress={handleFABPress}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
+});
