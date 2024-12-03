@@ -28,10 +28,10 @@ const MainTabs = () => {
         component={Home}
         options={{
           tabBarLabel: ({ focused }) => (
-            <TabBarText focused={focused} title="Home" />
+            <TabBarText focused={focused} title="Outage report" />
           ),
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} icon={"home"} />
+            <TabBarIcon focused={focused} icon={"alert"} />
           ),
         }}
       />
@@ -40,7 +40,7 @@ const MainTabs = () => {
         component={Profile}
         options={{
           tabBarLabel: ({ focused }) => (
-            <TabBarText focused={focused} title="Map" />
+            <TabBarText focused={focused} title="Outage Map" />
           ),
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} icon={"map"} />
@@ -52,7 +52,7 @@ const MainTabs = () => {
         component={About}
         options={{
           tabBarLabel: ({ focused }) => (
-            <TabBarText focused={focused} title="About" />
+            <TabBarText focused={focused} title="Settings" />
           ),
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} icon={"cog"} />
