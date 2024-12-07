@@ -1,106 +1,99 @@
-# Template bottom tabs with auth flow (Typescript)
 
-Typescript Template starter with React Navigation Bottom Tabs and Supabase auth using React Context
+# Appagon
 
-# Preview
+Appagon is a React Native application designed to map user-reported outages. It leverages Expo for universal development and integrates mapping services to provide a comprehensive user experience.
 
-![../media/authflow.png](../media/authflow.png)
+## Features
 
-# Installation
+- **Cross-Platform Support:** Runs on both iOS and Android devices.
+- **Interactive Mapping:** Displays user-reported outages on a map.
+- **State Management:** Utilizes Redux for efficient application state management.
+- **Backend Integration:** Communicates with a backend to fetch and submit outage data.
 
-1. Install [node.js](https://nodejs.org/en/)
-2. Install Expo
+## Project Structure
 
-   ```jsx
-   npm install --global expo-cli
-   ```
+```plaintext
+.
+├── .expo/               # Expo configuration files
+├── .github/ISSUE_TEMPLATE/  # Templates for issues and feature requests
+├── android/             # Android-specific project files
+├── app/                 # Main application source code
+├── assets/              # Static assets (images, fonts, etc.)
+├── ios/                 # iOS-specific project files
+├── .gitignore           # Files and directories ignored by Git
+├── app.json             # Expo project configuration
+├── babel.config.js      # Babel configuration
+├── package.json         # Project dependencies and scripts
+├── tsconfig.json        # TypeScript compiler configuration
+├── yarn.lock            # Ensures consistent dependency versions
+```
 
-3. Download this repo
-4. Install deps on your template folder
+## Getting Started
 
-   ```jsx
-   npm install
-   ```
+Follow these steps to set up and run the project locally.
 
-5. Start the environtment
+### Prerequisites
 
-   ```jsx
-   expo start
-   ```
+Ensure you have the following installed:
 
-# Auth Flow
-
-### Supabase Setup
-
-- Set up a new Supabase.io project
-- Fill your supabase credentials to your config inside `./src/initSupabase.ts`
-- You can find your supabase credentials in your project -> settings -> API
-
-  ```jsx
-  // Better put your these secret keys in .env file
-  export const supabase = createClient(
-  	"supabaseUrl", "supabaseKey",
-  	{
-  		localStorage: AsyncStorage as any,
-  	}
-  );
+- **Node.js** and **Yarn**
+- **Expo CLI**, which can be installed globally using:
+  ```bash
+  npm install -g expo-cli
   ```
 
-and you good to go!
+### Installation and Setup
 
-### Prebuilt UI Screens
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/juan-chocolon/appagon.git
+   cd appagon
+   ```
 
-There are 3 screens included inside `./src/screens/auth` and one more thing its included with the supabase auth function, so you don't need to create the function. The ilustrations I use [undraw](https://undraw.co/)
+2. **Install dependencies:**
+   ```bash
+   yarn install
+   ```
 
-- Login screen `./src/screens/auth/login.tsx`
-- Register screen `./src/screens/auth/register.tsx`
-- Forget password screen `./src/screens/auth/forget.tsx`
+3. **Start the development server:**
+   ```bash
+   yarn start
+   ```
 
-### React Navigation Auth Flow
+4. **Run the application:**
+   - Open the Expo Go app on your mobile device and scan the QR code.
+   - Alternatively, use simulators:
+     - **iOS Simulator:** Use Xcode to open the `ios/` directory.
+     - **Android Emulator:** Use Android Studio to open the `android/` directory.
 
-The checking logged users process is inside `./src/provider/AuthProvider` I use React Context, you can add more functions like get the data of the user and store it to the context (better static data, ex: uid)
+## Development and Contributing
 
-Inside the navigator `./src/navigation/AppNavigator.js`
-There's 2 stack navigator :
+Contributions are welcome! Follow these steps to contribute:
 
-- `<Auth/>` → for not logged in users stack
-- `<Main/>` → for logged in users stack
-- `<Loading/>` → when checking if the user is logged in or not loading screen
+1. **Fork the repository** and clone it to your local machine.
+2. **Create a new branch** for your feature or bug fix:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. **Make your changes** and commit them with descriptive messages:
+   ```bash
+   git commit -m "Description of changes"
+   ```
+4. **Push to your branch** and open a pull request to the main repository.
 
-```jsx
-export default () => {
-	const auth = useContext(AuthContext);
-	const user = auth.user;
-	return (
-		<NavigationContainer>
-			{user == null && <Loading />}
-			{user == false && <Auth />}
-			{user == true && <Main />}
-		</NavigationContainer>
-	);
-};
-```
+### Running Simulators Locally
 
-# Rapi UI
+- **iOS Simulator:** Use Xcode to open the `ios/` directory and run the application.
+- **Android Emulator:** Use Android Studio to set up and launch the app.
 
-![../media/hero.png](../media/hero.png)
+## License
 
-These UI components are provided by [Rapi UI](https://rapi-ui.kikiding.space/).
-Check the [documentation](https://rapi-ui.kikiding.space/docs/) for usage and more components.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-# File Managements
+## Contact
 
-These are the folders and the functionality all in `src/`
+For issues or feature requests, please use the [GitHub Issues](https://github.com/juan-chocolon/appagon/issues) page.
 
-```jsx
-/src/assets -> for media such as images, etc
-/src/components -> for components
-/src/navigation -> for React Navigation
-/src/provider -> for React Context
-/src/screens -> for Screens
-/src/types -> for Types
-```
+---
 
-if you find these useful don't forget to give it a star ⭐ and share it to your friends ❤️
-
-Reach me on [twitter](https://twitter.com/kikiding/)
+Happy coding! 🚀
