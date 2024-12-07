@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, Alert, Modal } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { Marker } from "react-native-maps";
+import MapView from 'react-native-map-clustering';
 import { FAB, Button } from "react-native-paper";
 import uuid from "react-native-uuid";
 import { supabase } from "../../initSupabase";
@@ -63,10 +64,6 @@ export default function OutageMapScreen(){
     }
   };
 
-  useEffect(() => {
-    fetchMarkers(); // Load markers on component mount
-  }, []);
-
   const handleReportPress = () => {
     setPopupVisible(true);
   };
@@ -124,6 +121,12 @@ export default function OutageMapScreen(){
       coordinate,
     });
   };
+
+  // hooks
+  useEffect(() => {
+    fetchMarkers(); // Load markers on component mount
+  }, []);
+
 
   return (
     <View style={styles.container}>
