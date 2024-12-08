@@ -1,0 +1,25 @@
+### User Story
+
+#### Title
+As a [user type], I want [feature or functionality], so that [value or benefit].
+
+#### Description
+Describe the story in detail, including any relevant background information.
+
+#### Acceptance Criteria
+Define what is required for this story to be considered complete:
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] Criterion 3
+
+#### Dependencies
+List any dependencies for this story (e.g., other stories, technical requirements, etc.).
+
+#### Related Issues
+- Issue: #[issue_number]
+
+#### Technical Notes
+Include any implementation details, considerations, or technical insights.
+
+#### Additional Context
+Add any other context or screenshots about the story.
