@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StatusBar } from "expo-status-bar";
+import { useRouter } from "expo-router";
 import {
   ScrollView,
   TouchableOpacity,
@@ -21,6 +21,7 @@ export default function ForgotPasswordScreen() {
   const { isDarkmode, setTheme } = useTheme();
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   async function forget() {
     setLoading(true);
@@ -85,7 +86,6 @@ export default function ForgotPasswordScreen() {
               placeholder="Enter your email"
               value={email}
               autoCapitalize="none"
-              autoCompleteType="off"
               autoCorrect={false}
               keyboardType="email-address"
               onChangeText={(text) => setEmail(text)}
@@ -112,7 +112,7 @@ export default function ForgotPasswordScreen() {
               <Text size="md">Already have an account?</Text>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("Login");
+                  router.push("./login");
                 }}
               >
                 <Text

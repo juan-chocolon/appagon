@@ -6,7 +6,7 @@ export default function AuthIndex() {
 
   useEffect(() => {
     // Redirect to the login screen by default
-    router.replace("/auth/login");
+    router.replace("/auth");
   }, [router]);
 
   return null; // No UI needed as this is a redirect-only component

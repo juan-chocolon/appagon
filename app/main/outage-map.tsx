@@ -90,6 +90,8 @@ export default function OutageMapScreen(){
           user_id: userId, // Use only the user ID
           id: tempMarker.id,
           created_at: new Date().toISOString(),
+          status: 'active',
+          status_date: new Date().toISOString()
         },
       ]);
   

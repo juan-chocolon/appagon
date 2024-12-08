@@ -5,13 +5,10 @@ import { supabase } from "../../initSupabase";
 
 export default function MyReportsPage() {
   const [reports, setReports] = useState([]); // User's reports
-  const [summary, setSummary] = useState({}); // Summary data
-  const [loading, setLoading] = useState(true); // Loading state
 
   // Fetch user's reports and summary data
   const fetchReports = async () => {
     try {
-      setLoading(true);
 
       // Get the current user ID
       const { data: userData, error: userError } = await supabase.auth.getUser();
@@ -24,8 +21,9 @@ export default function MyReportsPage() {
       // Fetch the user's most recent 5 reports
       const { data: recentReports, error: reportError } = await supabase
         .from("outage_reports")
-        .select("*")
+        .select("id, created_at, status, user_id")
         .eq("user_id", userId)
+        .eq("status", "active")
         .order("created_at", { ascending: false })
         .limit(5);
 
@@ -33,21 +31,13 @@ export default function MyReportsPage() {
         throw reportError;
       }
 
-      // Fetch the summary data
-      const { data: summaryData, error: summaryError } = await supabase.rpc("get_reports_summary", { user_id: userId });
-
-      if (summaryError) {
-        throw summaryError;
-      }
-
+      // update state
       setReports(recentReports);
-      setSummary(summaryData || {});
+
     } catch (error) {
       console.error("Error fetching reports:", error.message);
       Alert.alert("Error", "Failed to fetch reports.");
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   // Update report status and reason
@@ -70,28 +60,16 @@ export default function MyReportsPage() {
     }
   };
 
-  // Fetch reports and summary on component mount
+  // Fetch recent user reports
   useEffect(() => {
     fetchReports();
-  }, [reports, summary]);
+  }, [reports]);
 
   return (
     <View style={styles.container}>
-      {/* Summary Section */}
-      <View style={styles.summary}>
-        <Text style={styles.summaryTitle}>Summary</Text>
-        <Text>Total Reports: {summary.totalReports || 0}</Text>
-        <Text>Reports in Last 24 Hours: {summary.reportsLast24Hours || 0}</Text>
-        <Text>Reports Per Hour: {summary.reportsPerHour || "N/A"}</Text>
-        <Text>Most Recent Report: {summary.mostRecentReport || "N/A"}</Text>
-      </View>
-
       {/* Reports List */}
       <View style={styles.reports}>
         <Text style={styles.sectionTitle}>Your Recent Reports</Text>
-        {loading ? (
-          <Text>Loading...</Text>
-        ) : (
           <FlatList
             data={reports}
             keyExtractor={(item) => item.id.toString()}
@@ -108,17 +86,16 @@ export default function MyReportsPage() {
                   defaultValue={item.reason}
                 />
                 <Button
-                  title="Mark as Resolved"
-                  onPress={() => updateReport(item.id, "Resolved", item.reason)}
+                  title="Resolved"
+                  onPress={() => updateReport(item.id, "resolved", item.reason)}
                 />
                 <Button
-                  title="Input by Mistake"
-                  onPress={() => updateReport(item.id, "Mistake", item.reason)}
+                  title="Remove"
+                  onPress={() => updateReport(item.id, "removed", item.reason)}
                 />
               </View>
             )}
           />
-        )}
       </View>
     </View>
   );
