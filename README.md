@@ -28,7 +28,7 @@ Appagon is a React Native application designed to map user-reported outages. It 
 ├── yarn.lock            # Ensures consistent dependency versions
 ```
 
-## Getting Started
+## Getting Started (NOT WORKING ATM...updating soon)
 
 Follow these steps to set up and run the project locally.
 
@@ -93,7 +93,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact
 
 For issues or feature requests, please use the [GitHub Issues](https://github.com/juan-chocolon/appagon/issues) page.
-
----
-
-Happy coding! 🚀
