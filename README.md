@@ -1,95 +1,125 @@
+# Appagon - React Native App with Expo Router
 
-# Appagon
+Welcome to the Appagon repository! This guide will help you set up the project, instll dependencies, and deploy the app in either an iOS or Android simulator using Expo.
 
-Appagon is a React Native application designed to map user-reported outages. It leverages Expo for universal development and integrates mapping services to provide a comprehensive user experience.
+## Table of Contents
+1. [Prerequisites](#prerequisites)
+2. [Installation](#installation)
+3. [Running the App](#running-the-app)
+4. [Folder Structure](#folder-structure)
+5. [Additional Resources](#additional-resources)
 
-## Features
+---
 
-- **Cross-Platform Support:** Runs on both iOS and Android devices.
-- **Interactive Mapping:** Displays user-reported outages on a map.
-- **State Management:** Utilizes Redux for efficient application state management.
-- **Backend Integration:** Communicates with a backend to fetch and submit outage data.
+## Prerequisites
 
-## Project Structure
+Before starting, ensure you have the following tools installed on your system:
 
-```plaintext
-.
-├── .expo/               # Expo configuration files
-├── .github/ISSUE_TEMPLATE/  # Templates for issues and feature requests
-├── android/             # Android-specific project files
-├── app/                 # Main application source code
-├── assets/              # Static assets (images, fonts, etc.)
-├── ios/                 # iOS-specific project files
-├── .gitignore           # Files and directories ignored by Git
-├── app.json             # Expo project configuration
-├── babel.config.js      # Babel configuration
-├── package.json         # Project dependencies and scripts
-├── tsconfig.json        # TypeScript compiler configuration
-├── yarn.lock            # Ensures consistent dependency versions
-```
-
-## Getting Started (NOT WORKING ATM...updating soon)
-
-Follow these steps to set up and run the project locally.
-
-### Prerequisites
-
-Ensure you have the following installed:
-
-- **Node.js** and **Yarn**
-- **Expo CLI**, which can be installed globally using:
+### General Requirements
+- **Node.js**: Install from [Node.js official website](https://nodejs.org/).
+- **Yarn Package Manager**: Install Yarn globally:
+  ```bash
+  npm install -g yarn
+  ```
+- **Git**: Ensure Git is installed to clone the repository. Install from [Git official website](https://git-scm.com/).
+- **Expo CLI**: Install Expo CLI globally:
   ```bash
   npm install -g expo-cli
   ```
 
-### Installation and Setup
+### For iOS Deployment
+- **macOS with Xcode**:
+  - Install Xcode from the Mac App Store.
+  - Open Xcode, go to Preferences > Locations, and ensure the Command Line Tools are set.
+  - Install CocoaPods for managing iOS dependencies:
+    ```bash
+    sudo gem install cocoapods
+    ```
+- **Expo Go App**: Download from the App Store to test the app on a physical device.
 
-1. **Clone the repository:**
+### For Android Deployment
+- **Android Studio**:
+  - Install Android Studio from [Android Studio official website](https://developer.android.com/studio).
+  - During setup, ensure the following are installed:
+    - Android SDK
+    - Android SDK Platform-Tools
+    - Android Emulator
+  - Set up an Android Virtual Device (AVD) via Android Studio.
+- **Expo Go App**: Download from the Google Play Store to test the app on a physical device.
+
+---
+
+## Installation
+
+### Step 1: Clone the Repository
+Clone the repository to your local machine:
+```bash
+git clone https://github.com/juan-chocolon/appagon.git
+cd appagon
+```
+
+### Step 2: Install Dependencies
+Use Yarn to install project dependencies:
+```bash
+yarn install
+```
+
+---
+
+## Running the App
+
+### Step 1: Start the Expo Development Server
+To start the Expo development server, run:
+```bash
+yarn start
+```
+This will launch the Expo Dev Tools in your browser, providing QR codes for testing on physical devices and options to launch simulators.
+
+### Step 2: Run on iOS Simulator
+1. Ensure Xcode is installed and a simulator is available.
+2. In the Expo Dev Tools, click on the "Run on iOS simulator" option, or run:
    ```bash
-   git clone https://github.com/juan-chocolon/appagon.git
-   cd appagon
+   yarn ios
    ```
 
-2. **Install dependencies:**
+### Step 3: Run on Android Emulator
+1. Ensure Android Studio is installed and an emulator is running.
+2. In the Expo Dev Tools, click on the "Run on Android device/emulator" option, or run:
    ```bash
-   yarn install
+   yarn android
    ```
 
-3. **Start the development server:**
-   ```bash
-   yarn start
-   ```
+### Step 4: Test on Physical Devices
+- Scan the QR code from the Expo Dev Tools using the Expo Go app on your device.
 
-4. **Run the application:**
-   - Open the Expo Go app on your mobile device and scan the QR code.
-   - Alternatively, use simulators:
-     - **iOS Simulator:** Use Xcode to open the `ios/` directory.
-     - **Android Emulator:** Use Android Studio to open the `android/` directory.
+---
 
-## Development and Contributing
+## Folder Structure
 
-Contributions are welcome! Follow these steps to contribute:
+This project uses the Expo Router for routing. Below is the general structure of the repository:
 
-1. **Fork the repository** and clone it to your local machine.
-2. **Create a new branch** for your feature or bug fix:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. **Make your changes** and commit them with descriptive messages:
-   ```bash
-   git commit -m "Description of changes"
-   ```
-4. **Push to your branch** and open a pull request to the main repository.
+```
+appagon/
+├── app/              # Contains the main application code and screens
+├── assets/           # Static assets (images, fonts, etc.)
+├── node_modules/     # Yarn dependencies
+├── package.json      # Project metadata and scripts
+├── yarn.lock         # Dependency lock file
+├── .gitignore        # Ignored files and folders
+└── README.md         # This file
+```
 
-### Running Simulators Locally
+---
 
-- **iOS Simulator:** Use Xcode to open the `ios/` directory and run the application.
-- **Android Emulator:** Use Android Studio to set up and launch the app.
+## Additional Resources
+- [Expo Router Documentation](https://expo.github.io/router/docs)
+- [Yarn Documentation](https://yarnpkg.com/getting-started)
+- [Expo CLI Documentation](https://docs.expo.dev/workflow/expo-cli/)
+- [React Native Documentation](https://reactnative.dev/docs/getting-started)
+- [Android Studio Setup](https://developer.android.com/studio/install)
+- [Xcode Setup](https://developer.apple.com/xcode/)
 
-## License
+---
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+If you encounter any issues, feel free to open an issue in the repository or consult the official documentation linked above.
 
-## Contact
-
-For issues or feature requests, please use the [GitHub Issues](https://github.com/juan-chocolon/appagon/issues) page.
